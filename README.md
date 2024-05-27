@@ -19,11 +19,12 @@ O CDG TREINAMENTOS é capaz de acomodar até 22 pessoas sentadas, possui 2 proje
 
 Todo este espaço conta com o apoio de professores mestres e doutores especialistas que dão total suporte aos cinco pilares de trabalhos do laboratório, que são:
 
-Iniciação Científica (Pesquisa);
-Estágio (Desenvolvimento de Software);
-Time de Competição de Programação do Inatel (Code Troopers);
-Times de esportes eletrônicos do Inatel (Inatel e-Sports) e a
-Comunidade Facebook Developer Circle.
+- Iniciação Científica (Pesquisa);
+- Estágio (Desenvolvimento de Software);
+- Time de Competição de Programação do Inatel (Code Troopers);
+- Times de esportes eletrônicos do Inatel (Inatel e-Sports) e a
+- Comunidade Facebook Developer Circle.
+
 Toda a estrutura do laboratório e seus trabalhos estão à disposição para visitação, porém, é necessário o agendamento prévio.
 
 ## Proposta
