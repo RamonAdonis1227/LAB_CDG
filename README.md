@@ -1,4 +1,4 @@
-# LAB_CDG
+# Volume_CDG
 Repositório dedicado ao controle de volume dentro do laboratório CDG HUB.
 
 ## O que é o CDG HUB?
@@ -76,7 +76,7 @@ Divirta-se utilizando o código!!
 
 Foram cumpridas todas as demandas com êxito e antecendência em relação a todos os prazos, o código funcionou perfeitamente e será utilizado no laboratório!
 
-O código [Alerta.py](https://github.com/RamonAdonis1227/LAB_CDG/blob/main/Alerta.py) foi o código desenvolvido com fim de controlar o volume dos usuários presentes no laboratório CDG HUB!
+O código [Alerta.py](https://github.com/RamonAdonis1227/Volume_CDG/blob/main/Alerta.py) foi o código desenvolvido com fim de controlar o volume dos usuários presentes no laboratório CDG HUB!
 
 
 ### Autor
