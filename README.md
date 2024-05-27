@@ -52,7 +52,6 @@ Foram utilizadas as seguintes bibliotecas:
 - **PyGame:** Foi utilizada a biblioteca pygame para a reprodução de áudio.
 
 
-
 ## Testes
 
 Depois do código concluido e funcionando perfeitamente, foi necessário a condução de testes e experimentações práticas no laboratório:
@@ -61,6 +60,17 @@ Depois do código concluido e funcionando perfeitamente, foi necessário a condu
 - **Teste 2:** Foi necessário conduzir testes observatórios para verificar o nível de ruído ambiente do laboratório durante o uso normal, pois esse nível pode variar dependendo de equipamentos em funcionamento, conversas entre as pessoas e demais atividades do laboratório.
 - **Teste 3:** Foi necessário conduzir testes que considerem a distância entre a fonte do som e o microfone, pois quanto maior a distância, mais fraco será o sinal de áudio capturado pelo microfone, o que pode influenciar no nível de Threshold escolhido.
 - **Teste 4:** Foi necessário conduzir testes para escolha do valor de Threshold, pois um Threshold muito baixo poderia resultar em alertas sonoros frequentes, o que seria pertubador para as pessoas do laboratório, e um Threshold muito alto pode não ser eficaz para controlar o volume em niveis aceitaveis.
+
+## Uso Próprio
+
+Caso você tenha interesse em utilizar o código para uso pessoal, segue algumas dicas para que você tenha facilidade de manuseio:
+
+- **Threshold:** Você pode alterar o limite de volume definido para que o código execute na linha 9 do código, o valor escolhido por mim foi de 40 após a realização de todos os testes, mas você pode alterar para o valor que você tenha interesse em utilizar. Lembrando que esse valor não está em decibéis, é um valor normalizado do áudio para facilitar o trabalho com os volumes capturados pelo microfone!
+- **Alerta Sonoro:** Você pode alterar o alerta sonoro para o som que voce tenha interesse em utilizar na linha 26 do código, inicialmente o código vem com o arquivo "Alerta.mp3" definido por padrão, mas basta você adicionar o nome do arquivo que deseja utilizar e colocar o arquivo no mesmo diretório do código que ele será executado quando o valor de Threshold for atingido.
+- **Execução:** Inicialmente quando você executa o código, ele ficará executando infinitamente até que você decida que ele deve ser interrompido, a tecla para interrupção do código é "CTRL + C", quando você apertar, o código será interrompido automaticamente. Quando o alerta é emitido, o código continua capturando o áudio ambiente e fazendo a verificação de acordo com o valor de Threshold, porém o alerta só será emitido novamente quando o alerta que está em execução terminar de ser executado, há uma variável fazendo a verificação desse requisito no código.
+
+Divirta-se utilizando o código!!
+
 
 ## Finalização
 
