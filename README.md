@@ -73,4 +73,4 @@ O código [Alerta.py](https://github.com/RamonAdonis1227/LAB_CDG/blob/main/Alert
 - [Ramon Adônis Pereira de Abreu](https://github.com/RamonAdonis1227)
 
 
-<img src = "https://www.juicysantos.com.br/wp-content/uploads/2023/02/cristiano-ronaldo.jpg">
+<img src = "https://pbs.twimg.com/media/GMLlfhYXgAAu_KV.jpg:large">
