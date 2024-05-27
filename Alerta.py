@@ -23,7 +23,7 @@ def play_alert_sound():
     global audio_playing
     audio_playing = True
     pygame.mixer.init()  # Inicializa o mixer do Pygame para reprodução de áudio
-    pygame.mixer.music.load("Estágio.mp3")  # Carrega o arquivo de áudio
+    pygame.mixer.music.load("Alerta.mp3")  # Carrega o arquivo de áudio
     pygame.mixer.music.play()  # Inicia a reprodução do áudio   
     while pygame.mixer.music.get_busy():  # Aguarda até que a reprodução do áudio seja concluída
         time.sleep(0.1)
