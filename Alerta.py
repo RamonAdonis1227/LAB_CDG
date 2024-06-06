@@ -1,43 +1,79 @@
-import sounddevice as sd  # Importa a biblioteca para captura de áudio
-import numpy as np  # Importa a biblioteca para manipulação de arrays
-import time  # Importa a biblioteca para manipulação de tempo
-import threading  # Importa a biblioteca para execução de tarefas em threads
-import pygame  # Importa a biblioteca para reprodução de áudio
+import pyaudio  # Importa a biblioteca PyAudio para lidar com entrada e saída de áudio
+import numpy as np  # Importa a biblioteca NumPy para operações numéricas eficientes
+import time  # Importa a biblioteca time para trabalhar com temporização
+import threading  # Importa a biblioteca threading para lidar com threads
+import pygame  # Importa a biblioteca Pygame para reprodução de áudio
+import logging  # Importa a biblioteca logging para registro de mensagens de debug, info, etc.
 
-audio_playing = False  # Variável para controlar se o áudio está sendo reproduzido
-audio_played = False   # Variável para controlar se o áudio foi reproduzido
-threshold = 40      # Defina o limite de volume desejado
+# Configuração do logger
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def audio_callback(indata, frames, time_info, status):
-    global audio_playing, audio_played
-    volume_norm = np.linalg.norm(indata) * 10  # Calcula o volume normalizado do áudio
-    print("Volume atual:", volume_norm)
-    time.sleep(0.1)  # Aguarda um curto período para evitar sobrecarga
-    if volume_norm > threshold and not audio_playing:
-        threading.Thread(target=play_alert_sound).start()  # Inicia a reprodução do alerta sonoro em uma nova thread
-        audio_played = True
-    elif volume_norm <= threshold:  
-        audio_played = False
+audio_playing = False  # Variável para controlar se o áudio está sendo reproduzido ou não
+threshold = 40  # Defina o limite de volume desejado
 
+# Função de callback que é chamada quando novos dados de áudio estão disponíveis
+def audio_callback(in_data, frame_count, time_info, status):
+    global audio_playing  # Usa a variável global audio_playing
+    try:
+        audio_data = np.frombuffer(in_data, dtype=np.float32)  # Converte os dados de áudio em formato NumPy
+        volume_norm = np.linalg.norm(audio_data) * 10  # Calcula o volume normalizado dos dados de áudio
+        logging.debug(f"Volume atual: {volume_norm}")  # Registra o volume atual
+        time.sleep(0.1) # Aguarda um curto período pra evitar sobrecarga
+
+        # Verifica se o volume excede o threshold e se o áudio não está sendo reproduzido atualmente com fins de controle
+        if volume_norm > threshold and not audio_playing:
+            threading.Thread(target=play_alert_sound).start()  # Inicia uma nova thread para reproduzir o alerta
+    except Exception as e:
+        logging.error(f"Erro no callback de áudio: {e}")  # Registra erros que podem ocorrer no callback de áudio
+
+    return (in_data, pyaudio.paContinue)  # Retorna os dados da entrada de áudio e indica que a monitoração deve continuar
+
+# Função para reproduzir o alerta sonoro
 def play_alert_sound():
-    global audio_playing
-    audio_playing = True
-    pygame.mixer.init()  # Inicializa o mixer do Pygame para reprodução de áudio
-    pygame.mixer.music.load("Alerta.mp3")  # Carrega o arquivo de áudio
-    pygame.mixer.music.play()  # Inicia a reprodução do áudio   
-    while pygame.mixer.music.get_busy():  # Aguarda até que a reprodução do áudio seja concluída
-        time.sleep(0.1)
-    audio_playing = False  # Atualiza a variável para indicar que a reprodução foi concluída
+    global audio_playing  # Usa a variável global audio_playing
+    logging.debug("Iniciando reprodução de alerta")
+    audio_playing = True  # Define que o áudio está sendo reproduzido
 
+    try:
+        pygame.mixer.init()  # Inicializa o mixer do Pygame para reprodução de áudio
+        pygame.mixer.music.load("Alerta.mp3")  # Carrega o arquivo de áudio para reprodução
+        pygame.mixer.music.play()  # Inicia a reprodução do áudio
+        
+        while pygame.mixer.music.get_busy():  # Aguarda até que a reprodução do áudio termine
+            time.sleep(0.1) # Aguarda um curto período pra evitar sobrecarga
+    except Exception as e:
+        logging.error(f"Erro ao reproduzir o áudio: {e}")  # Registra erros que podem ocorrer durante a reprodução do áudio
+    finally:
+        audio_playing = False  # Define que a reprodução do áudio terminou
+        logging.debug("Reprodução de alerta concluída")
+
+# Função principal do programa
 def main():
-    with sd.InputStream(callback=audio_callback):  # Inicia o monitoramento de áudio
-        print("Iniciando monitoramento de áudio...")
-        print("Pressione Ctrl+C para interromper o programa.")
-        try:
-            while True:
-                pass  # Mantém o programa em execução
-        except KeyboardInterrupt:
-            print("Programa interrompido pelo usuário.")
+    logging.info("Iniciando monitoramento de áudio...")  # Inicia o monitoramento de áudio
+    logging.info("Pressione Ctrl+C para interromper o programa.")  # Informa ao usuário como interromper o programa
+    
+    try:
+        p = pyaudio.PyAudio()  # Inicializa o objeto PyAudio para lidar com entrada e saída de áudio
+        stream = p.open(format=pyaudio.paFloat32,  # Configura as propriedades do stream de entrada de áudio
+                        channels=1,
+                        rate=44100,
+                        input=True,
+                        stream_callback=audio_callback)
+
+        stream.start_stream()  # Inicia a monitoração de áudio
+
+        while stream.is_active():  # Mantém o programa em execução enquanto o stream de áudio está ativo
+            time.sleep(1)  # Espera um segundo antes de verificar novamente se o stream está ativo
+
+    except KeyboardInterrupt:
+        logging.info("Programa interrompido pelo usuário.")  # Informa que o programa foi interrompido pelo usuário
+    except Exception as e:
+        logging.error(f"Erro no fluxo de entrada de áudio: {e}")  # Registra erros que podem ocorrer no fluxo de áudio
+    finally:
+        stream.stop_stream()  # Interrompe o stream de áudio
+        stream.close()  # Fecha o stream de áudio
+        p.terminate()  # Encerra a instância PyAudio
+        logging.info("Monitoramento de áudio encerrado.")  # Informa o encerramento do monitoramento de áudio
 
 if __name__ == "__main__":
-    main()
+    main()  # Chama a função principal do programa se este script for executado diretamente
