@@ -45,7 +45,7 @@ O código foi desenvolvido com sucesso e com antecedência em relação ao prazo
 
 Foram utilizadas as seguintes bibliotecas:
 
-- **PyAudio:** Foi utilizada a biblioteca sounddevice para lidar com a entrada e saída de áudio.
+- **PyAudio:** Foi utilizada a biblioteca pyaudio para lidar com a entrada e saída de áudio.
 - **Numpy:** Foi utilizada a biblioteca numpy para operações numéricas eficientes.
 - **Time:** Foi utilizada a biblioteca time para trabalhar com a manipulação de tempo.
 - **Threading:** Foi utilizada a biblioteca threading para a execução de tarefas em Threads.
