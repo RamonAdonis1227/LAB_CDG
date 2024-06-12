@@ -7,6 +7,13 @@ import logging  # Importa a biblioteca logging para registro de mensagens de deb
 
 # Configuração do logger
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger('audio_monitor')
+
+# Configuração do FileHandler para noise.txt
+file_handler = logging.FileHandler('noise.txt')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logger.addHandler(file_handler)
 
 audio_playing = False  # Variável para controlar se o áudio está sendo reproduzido ou não
 threshold = 40  # Defina o limite de volume desejado
@@ -17,41 +24,42 @@ def audio_callback(in_data, frame_count, time_info, status):
     try:
         audio_data = np.frombuffer(in_data, dtype=np.float32)  # Converte os dados de áudio em formato NumPy
         volume_norm = np.linalg.norm(audio_data) * 10  # Calcula o volume normalizado dos dados de áudio
-        logging.debug(f"Volume atual: {volume_norm}")  # Registra o volume atual
-        time.sleep(0.1) # Aguarda um curto período pra evitar sobrecarga
+        logger.debug(f"Volume atual: {volume_norm}")  # Registra o volume atual
+        time.sleep(0.1)  # Aguarda um curto período pra evitar sobrecarga
 
-        # Verifica se o volume excede o threshold e se o áudio não está sendo reproduzido atualmente com fins de controle
+        # Verifica se o volume excede o threshold e se o áudio não está sendo reproduzido atualmente
         if volume_norm > threshold and not audio_playing:
+            logger.error(f"Alerta de volume: {volume_norm}")  # Registra o alerta no arquivo noise.txt
             threading.Thread(target=play_alert_sound).start()  # Inicia uma nova thread para reproduzir o alerta
     except Exception as e:
-        logging.error(f"Erro no callback de áudio: {e}")  # Registra erros que podem ocorrer no callback de áudio
+        logger.error(f"Erro no callback de áudio: {e}")  # Registra erros que podem ocorrer no callback de áudio
 
     return (in_data, pyaudio.paContinue)  # Retorna os dados da entrada de áudio e indica que a monitoração deve continuar
 
 # Função para reproduzir o alerta sonoro
 def play_alert_sound():
     global audio_playing  # Usa a variável global audio_playing
-    logging.debug("Iniciando reprodução de alerta")
+    logger.debug("Iniciando reprodução de alerta")
     audio_playing = True  # Define que o áudio está sendo reproduzido
 
     try:
         pygame.mixer.init()  # Inicializa o mixer do Pygame para reprodução de áudio
         pygame.mixer.music.load("Alerta.mp3")  # Carrega o arquivo de áudio para reprodução
         pygame.mixer.music.play()  # Inicia a reprodução do áudio
-        
+
         while pygame.mixer.music.get_busy():  # Aguarda até que a reprodução do áudio termine
-            time.sleep(0.1) # Aguarda um curto período pra evitar sobrecarga
+            time.sleep(0.1)  # Aguarda um curto período pra evitar sobrecarga
     except Exception as e:
-        logging.error(f"Erro ao reproduzir o áudio: {e}")  # Registra erros que podem ocorrer durante a reprodução do áudio
+        logger.error(f"Erro ao reproduzir o áudio: {e}")  # Registra erros que podem ocorrer durante a reprodução do áudio
     finally:
         audio_playing = False  # Define que a reprodução do áudio terminou
-        logging.debug("Reprodução de alerta concluída")
+        logger.debug("Reprodução de alerta concluída")
 
 # Função principal do programa
 def main():
-    logging.info("Iniciando monitoramento de áudio...")  # Inicia o monitoramento de áudio
-    logging.info("Pressione Ctrl+C para interromper o programa.")  # Informa ao usuário como interromper o programa
-    
+    logger.info("Iniciando monitoramento de áudio...")  # Inicia o monitoramento de áudio
+    logger.info("Pressione Ctrl+C para interromper o programa.")  # Informa ao usuário como interromper o programa
+
     try:
         p = pyaudio.PyAudio()  # Inicializa o objeto PyAudio para lidar com entrada e saída de áudio
         stream = p.open(format=pyaudio.paFloat32,  # Configura as propriedades do stream de entrada de áudio
@@ -66,14 +74,14 @@ def main():
             time.sleep(1)  # Espera um segundo antes de verificar novamente se o stream está ativo
 
     except KeyboardInterrupt:
-        logging.info("Programa interrompido pelo usuário.")  # Informa que o programa foi interrompido pelo usuário
+        logger.info("Programa interrompido pelo usuário.")  # Informa que o programa foi interrompido pelo usuário
     except Exception as e:
-        logging.error(f"Erro no fluxo de entrada de áudio: {e}")  # Registra erros que podem ocorrer no fluxo de áudio
+        logger.error(f"Erro no fluxo de entrada de áudio: {e}")  # Registra erros que podem ocorrer no fluxo de áudio
     finally:
         stream.stop_stream()  # Interrompe o stream de áudio
         stream.close()  # Fecha o stream de áudio
         p.terminate()  # Encerra a instância PyAudio
-        logging.info("Monitoramento de áudio encerrado.")  # Informa o encerramento do monitoramento de áudio
+        logger.info("Monitoramento de áudio encerrado.")  # Informa o encerramento do monitoramento de áudio
 
 if __name__ == "__main__":
     main()  # Chama a função principal do programa se este script for executado diretamente
