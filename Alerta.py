@@ -29,7 +29,7 @@ def audio_callback(in_data, frame_count, time_info, status):
 
         # Verifica se o volume excede o threshold e se o áudio não está sendo reproduzido atualmente
         if volume_norm > threshold and not audio_playing:
-            logger.error(f"Alerta de volume: {volume_norm}")  # Registra o alerta no arquivo noise.txt
+            logger.info(f"Alerta de volume: {volume_norm}")  # Registra o alerta como WARNING no arquivo noise.txt
             threading.Thread(target=play_alert_sound).start()  # Inicia uma nova thread para reproduzir o alerta
     except Exception as e:
         logger.error(f"Erro no callback de áudio: {e}")  # Registra erros que podem ocorrer no callback de áudio
@@ -39,7 +39,7 @@ def audio_callback(in_data, frame_count, time_info, status):
 # Função para reproduzir o alerta sonoro
 def play_alert_sound():
     global audio_playing  # Usa a variável global audio_playing
-    logger.debug("Iniciando reprodução de alerta")
+    logger.info("Iniciando reprodução de alerta")
     audio_playing = True  # Define que o áudio está sendo reproduzido
 
     try:
@@ -53,7 +53,7 @@ def play_alert_sound():
         logger.error(f"Erro ao reproduzir o áudio: {e}")  # Registra erros que podem ocorrer durante a reprodução do áudio
     finally:
         audio_playing = False  # Define que a reprodução do áudio terminou
-        logger.debug("Reprodução de alerta concluída")
+        logger.info("Reprodução de alerta concluída")
 
 # Função principal do programa
 def main():
