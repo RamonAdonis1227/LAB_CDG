@@ -52,6 +52,28 @@ Foram utilizadas as seguintes bibliotecas:
 - **PyGame:** Foi utilizada a biblioteca pygame para a reprodução de áudio.
 - **Logging:** Foi utilizada a biblioteca logging para registro de mensagens de debug, info, etc.
 
+### Logger
+
+Foi utilizado um logger com fins de registros de mensagens, exibições e armazenamento de dados de diversos níveis de severidade, os níveis existentes, são:
+
+- **DEBUG:** Informações detalhadas, como os volumes atuais do momento e afins, tipicamente de interesse apenas quando diagnosticando problemas.
+- **INFO:** Confirmação de que as coisas estão funcionando como esperado, como início e fim de monitoramento, reprodução/conclusão do alerta de áudio, informação de interrupção e afins.
+- **WARNING:** Uma indicação de que algo inesperado aconteceu ou que algum problema menor foi detectado. O software ainda está funcionando conforme esperado.
+- **ERROR:** Exibido devido a um problema mais sério, o software não conseguiu realizar alguma função.
+- **CRITICAL:** Um erro grave, indicando que o programa pode não ser capaz de continuar em execução.
+
+Com fins de monitoramentos laboratoriais de acordo com as verificações posteriores dos logs de monitoramento, foi implementado um FileHandler na linha 13 do código, tal qual armazena as informações de acordo com os niveis de severidade adotados por mim, eu adotei o nivel "INFO", isso salvará todas as mensagens de log com nível "INFO" e acima, isso inclui os niveis:
+
+- **INFO**
+- **WARNING**
+- **ERROR**
+- **CRITICAL**
+
+É possível alterar esses níves na linha 14 do código.
+
+Todos os logs serão salvos em um arquivo txt com nome de "noise.txt", e poderão ser verificados posteriormente, de acordo com suas necessidades!
+
+
 ## Testes
 
 Depois do código concluido e funcionando perfeitamente, foi necessário a condução de testes e experimentações práticas no laboratório:
@@ -65,9 +87,9 @@ Depois do código concluido e funcionando perfeitamente, foi necessário a condu
 
 Caso você tenha interesse em utilizar o código para uso pessoal, segue algumas dicas para que você tenha facilidade de manuseio:
 
-- **Threshold:** Você pode alterar o limite de volume definido para que o código execute na linha 12 do código, o valor escolhido por mim foi de 40 após a realização de todos os testes, mas você pode alterar para o valor que você tenha interesse em utilizar. Lembrando que esse valor não está em decibéis, é um valor normalizado do áudio para facilitar o trabalho com os volumes capturados pelo microfone!
-- **Alerta Sonoro:** Você pode alterar o alerta sonoro para o som que voce tenha interesse em utilizar na linha 39 do código, inicialmente o código vem com o arquivo "Alerta.mp3" definido por padrão, mas basta você adicionar o nome e o formato do arquivo que deseja utilizar e colocar o arquivo no mesmo diretório do código que ele será executado quando o valor de Threshold for atingido. A biblioteca utilizada tem suporte para diversos formatos de áudio, conduzi testes com os mais utilizados no dia a dia e todos responderam positivamente.
-- **Normalização:** Você pode alterar a normalização do áudio do código para que se adeque de acordo com as suas necessidades, essa normalização é feita na linha 19 do código. No meu caso, eu multipliquei por 10 para se adequar ao caso do laboratório, porém você pode alterar pro valor que for mais interessante para você e utilizar o código da mesma forma!!
+- **Threshold:** Você pode alterar o limite de volume definido para que o código execute na linha 19 do código, o valor escolhido por mim foi de 40 após a realização de todos os testes, mas você pode alterar para o valor que você tenha interesse em utilizar. Lembrando que esse valor não está em decibéis, é um valor normalizado do áudio para facilitar o trabalho com os volumes capturados pelo microfone!
+- **Alerta Sonoro:** Você pode alterar o alerta sonoro para o som que voce tenha interesse em utilizar na linha 47 do código, inicialmente o código vem com o arquivo "Alerta.mp3" definido por padrão, mas basta você adicionar o nome e o formato do arquivo que deseja utilizar e colocar o arquivo no mesmo diretório do código que ele será executado quando o valor de Threshold for atingido. A biblioteca utilizada tem suporte para diversos formatos de áudio, conduzi testes com os mais utilizados no dia a dia e todos responderam positivamente.
+- **Normalização:** Você pode alterar a normalização do áudio do código para que se adeque de acordo com as suas necessidades, essa normalização é feita na linha 26 do código. No meu caso, eu multipliquei por 10 para se adequar ao caso do laboratório, porém você pode alterar pro valor que for mais interessante para você e utilizar o código da mesma forma!!
 - **Execução:** Inicialmente quando você executa o código, ele ficará executando infinitamente até que você decida que ele deve ser interrompido, a tecla para interrupção do código é "CTRL + C", quando você apertar, o código será interrompido automaticamente. Quando o alerta é emitido, o código continua capturando o áudio ambiente e fazendo a verificação de acordo com o valor de Threshold, porém o alerta só será emitido novamente quando o alerta que está em execução terminar de ser executado, há uma variável fazendo a verificação desse requisito no código, assim como também é exibido no terminal ao início e fim da reprodução.
 
 Divirta-se utilizando o código!!
